@@ -1,0 +1,46 @@
+<adapter>
+  <unique-id>hello-world</unique-id>
+  <channel-list>
+    <channel>
+      <unique-id>channel</unique-id>
+      <consume-connection class="jetty-embedded-connection">
+        <unique-id>jetty-embedded-connection</unique-id>
+      </consume-connection>
+      <produce-connection class="null-connection" />
+      <workflow-list>
+        <standard-workflow>
+          <unique-id>workflow</unique-id>
+          <consumer class="jetty-message-consumer">
+            <destination class="configured-consume-destination">
+              <configured-thread-name>hello-world</configured-thread-name>
+              <destination>/*</destination>
+            </destination>
+            <parameter-handler class="jetty-http-ignore-parameters"/>
+            <header-handler class="jetty-http-headers-as-metadata"/>
+          </consumer>
+          <service-collection class="service-list">
+            <services>
+              <payload-from-metadata-service>
+                <template><![CDATA[Hello World!]]></template>
+              </payload-from-metadata-service>
+            </services>
+          </service-collection>
+          <producer class="jetty-standard-response-producer">
+            <unique-id>Send HTTP Response</unique-id>
+            <status-provider class="http-metadata-status">
+              <code-key>adphttpresponse</code-key>
+              <default-status>OK_200</default-status>
+            </status-provider>
+            <response-header-provider class="jetty-metadata-response-headers">
+              <filter class="remove-all-metadata-filter"/>
+            </response-header-provider>
+            <content-type-provider class="http-configured-content-type-provider">
+              <mime-type>text/plain</mime-type>
+            </content-type-provider>
+            <send-payload>true</send-payload>
+          </producer>
+        </standard-workflow>
+      </workflow-list>
+    </channel>
+  </channel-list>
+</adapter>  
