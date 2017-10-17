@@ -22,18 +22,11 @@ sourceSets {
   }
 }
 
-task(interlokTest, type: JavaExec, overwrite:true) {
+task(interlokTest, type: JavaExec) {
     main = 'com.adaptris.tester.runners.TestExecutor'
     classpath = sourceSets.test.runtimeClasspath
     args "$projectDir/test/src/test.xml"
     args "$buildDir/test-results/" 
-}
-
-test {
-    reports {
-        junitXml.enabled = false
-        html.enabled = true
-    }               
 }
 
 check.dependsOn interlokTest
