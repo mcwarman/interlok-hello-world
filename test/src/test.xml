@@ -1,0 +1,30 @@
+<service-test>
+  <unique-id>interlok-hello-world</unique-id>
+  <test-client class="embedded-jmx-test-client" />
+  <test-list>
+    <unique-id>service-tests</unique-id>
+    <test>
+      <unique-id>payload-from-metadata-service</unique-id>
+      <service-to-test>
+        <source class="file-source">
+          <file>config/adapter.xml</file>
+        </source>
+        <preprocessors>
+          <preprocessor class="xpath-preprocessor">
+            <xpath>//payload-from-metadata-service</xpath>
+          </preprocessor>
+        </preprocessors>
+      </service-to-test>
+      <test-case>
+        <unique-id>TestCase1</unique-id>
+        <assertions>
+          <assert-metadata-contains>
+          </assert-metadata-contains>
+          <assert-payload-equals>
+            <payload>Hello World!</payload>
+          </assert-payload-equals>
+        </assertions>
+      </test-case>
+    </test>
+  </test-list>
+</service-test>

@@ -1,0 +1,39 @@
+ext {
+  adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.6-SNAPSHOT'
+}
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+  maven { url "https://development.adaptris.net/nexus/content/groups/public" }
+  maven { url "https://development.adaptris.net/nexus/content/repositories/snapshots" }
+  maven { url "https://development.adaptris.net/nexus/content/repositories/releases" }
+}
+
+dependencies {
+  compile ("com.adaptris:interlok-service-tester:$adpCoreVersion") { changing= true}
+}
+
+sourceSets {
+  test {
+    resources {
+      srcDir "$projectDir/test/resources"
+    }
+  }
+}
+
+task(interlokTest, type: JavaExec, overwrite:true) {
+    main = 'com.adaptris.tester.runners.TestExecutor'
+    classpath = sourceSets.test.runtimeClasspath
+    args "$projectDir/test/src/test.xml"
+    args "$buildDir/test-results/" 
+}
+
+test {
+    reports {
+        junitXml.enabled = false
+        html.enabled = true
+    }               
+}
+
+check.dependsOn interlokTest
