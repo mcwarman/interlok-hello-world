@@ -1,0 +1,12 @@
+#
+version: '3.2'
+services:
+  interlok:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mcwarman/interlok-hello-world:latest
+    environment:
+      PORT: 8089
+    ports:
+      - 8089:8089
