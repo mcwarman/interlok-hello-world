@@ -3,6 +3,7 @@ language: java
 env:
   global:
   - REPO=mcwarman/interlok-hello-world
+  - HEROKU_APP=interlok-hello-world
 
 services:
   - docker
