@@ -3,6 +3,10 @@ ext {
 }
 apply plugin: 'java'
 
+configurations {
+  antJunit
+}
+
 repositories {
   mavenCentral()
   maven { url "https://development.adaptris.net/nexus/content/groups/public" }
@@ -12,6 +16,7 @@ repositories {
 
 dependencies {
   compile ("com.adaptris:interlok-service-tester:$adpCoreVersion") { changing= true}
+  antJunit ("org.apache.ant:ant-junit:1.8.2")
 }
 
 sourceSets {
@@ -22,11 +27,32 @@ sourceSets {
   }
 }
 
+check.dependsOn -= test
+task test(overwrite: true) {
+  doLast {
+    tasks.interlokTest.execute()
+    antJunitReport()
+  }
+}
+check.dependsOn += test
+test.dependsOn += processTestResources
+
 task(interlokTest, type: JavaExec) {
-    main = 'com.adaptris.tester.runners.TestExecutor'
-    classpath = sourceSets.test.runtimeClasspath
-    args "$projectDir/test/src/test.xml"
-    args "$buildDir/test-results/" 
+  main = 'com.adaptris.tester.runners.TestExecutor'
+  classpath = sourceSets.test.runtimeClasspath
+  args "$projectDir/test/src/test.xml"
+  args "$buildDir/test-results/" 
 }
 
-check.dependsOn interlokTest
+def antJunitReport() {
+  ant.taskdef(
+    name: 'junitreport',
+    classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
+    classpath: configurations.antJunit.asPath
+  )
+
+  ant.junitreport(todir: "$buildDir/test-results") {
+    fileset(dir: "$buildDir/test-results", includes: 'TEST-*.xml')
+    report(todir: "$buildDir/test-results/html", format: "frames" )
+  }
+}
