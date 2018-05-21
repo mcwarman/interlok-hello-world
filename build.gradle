@@ -1,5 +1,5 @@
 ext {
-  adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.6-SNAPSHOT'
+  adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.7-SNAPSHOT'
 }
 apply plugin: 'java'
 
@@ -33,7 +33,9 @@ task test(overwrite: true) {
     javaexec {
       main = 'com.adaptris.tester.runners.TestExecutor'
       classpath = sourceSets.test.runtimeClasspath
+      args "--serviceTest"
       args "$projectDir/test/src/test.xml"
+      args "--serviceTestOutput"
       args "$buildDir/test-results/"
     }
   }
