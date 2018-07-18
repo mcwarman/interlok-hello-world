@@ -1,9 +1,11 @@
 #!/bin/bash
 set -e
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
-  echo "Initiating Docker Hub Build"
-  curl -w "\n" -s -H "Content-Type: application/json" --data "{\"source_type\": \"Branch\", \"source_name\": \"$TRAVIS_BRANCH\"}" -X POST "https://registry.hub.docker.com/u/mcwarman/interlok-hello-world/trigger/$DOCKER_HUB_TOKEN/"
-  echo "Initiated Docker Hub Build"
+  echo "Deploying to Docker Hub"
+  echo "$DOCKER_PASS" | docker login --u "$DOCKER_USER" --password-stdin;
+  docker push $REPO:latest;
+  docker logout;
+  echo "Deployment to Docker Hub Complete"
   echo "Deploying to Heroku"
   docker login --username=_ --password=$HEROKU_PASS registry.heroku.com;
   docker tag $REPO:latest registry.heroku.com/$HEROKU_APP/web:latest;
