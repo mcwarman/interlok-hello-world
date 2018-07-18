@@ -2,7 +2,7 @@
 set -e
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
   echo "Deploying to Docker Hub"
-  echo "$DOCKER_PASS" | docker login --u "$DOCKER_USER" --password-stdin;
+  echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin;
   docker push $REPO:latest;
   docker logout;
   echo "Deployment to Docker Hub Complete"
