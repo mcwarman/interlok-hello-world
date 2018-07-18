@@ -1,7 +1,20 @@
+plugins {
+  id "java"
+  id "distribution"
+  id "com.palantir.docker" version "0.19.2"
+}
+
 ext {
   adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.7-SNAPSHOT'
 }
-apply plugin: 'java'
+
+distTar.enabled=false
+distZip.enabled=false
+dockerfileZip.enabled=false
+compileJava.enabled=false
+processResources.enabled=false
+classes.enabled=false
+jar.enabled=false
 
 configurations {
   antJunit
@@ -15,16 +28,8 @@ repositories {
 }
 
 dependencies {
-  compile ("com.adaptris:interlok-service-tester:$adpCoreVersion") { changing= true}
+  testCompile ("com.adaptris:interlok-service-tester:$adpCoreVersion") { changing= true}
   antJunit ("org.apache.ant:ant-junit:1.8.2")
-}
-
-sourceSets {
-  test {
-    resources {
-      srcDir "$projectDir/test/resources"
-    }
-  }
 }
 
 check.dependsOn -= test
@@ -34,7 +39,7 @@ task test(overwrite: true) {
       main = 'com.adaptris.tester.runners.TestExecutor'
       classpath = sourceSets.test.runtimeClasspath
       args "--serviceTest"
-      args "$projectDir/test/src/test.xml"
+      args "$projectDir/src/test/adapter/test.xml"
       args "--serviceTestOutput"
       args "$buildDir/test-results/"
     }
@@ -59,3 +64,27 @@ task junitReport {
 check.dependsOn += test
 test.dependsOn += processTestResources
 test.finalizedBy junitReport
+
+distributions {
+  main {
+    contents {
+      into('lib') {
+        from(project.configurations.runtime)
+      }
+      into('/') {
+        from file("$projectDir/src/main/resources/docker-entrypoint-wrapper.sh")
+      }
+      rename '(.*)-[0-9]+\\..*.jar', '$1.jar'
+    }
+  }
+}
+
+docker {
+  name "mcwarman/interlok-helloworld"
+  tags 'latest'
+  pull true
+  files tasks.installDist.outputs
+}
+
+docker.dependsOn installDist
+installDist.dependsOn test

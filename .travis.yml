@@ -9,11 +9,10 @@ services:
   - docker
 
 install:
-  - docker build -t $REPO:$TRAVIS_BUILD_NUMBER .
+  - ./gradlew docker
 
 script:
-  - docker run -it --rm -e INTERLOK_OPTS="-configtest bootstrap.properties" $REPO:$TRAVIS_BUILD_NUMBER
-  - ./gradlew check
+  - docker run -it --rm -e INTERLOK_OPTS="-configtest bootstrap.properties" $REPO:latest
  
 after_success:
  - ./deploy.sh
