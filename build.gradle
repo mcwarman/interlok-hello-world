@@ -80,7 +80,7 @@ distributions {
 }
 
 docker {
-  name "mcwarman/interlok-hello-world"
+  name "adaptrislabs/interlok-hello-world"
   tags 'latest'
   pull true
   files tasks.installDist.outputs
