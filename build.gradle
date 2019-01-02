@@ -5,7 +5,7 @@ plugins {
 }
 
 ext {
-  adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.7-SNAPSHOT'
+  adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.8-SNAPSHOT'
 }
 
 distTar.enabled=false
@@ -22,9 +22,9 @@ configurations {
 
 repositories {
   mavenCentral()
-  maven { url "https://development.adaptris.net/nexus/content/groups/public" }
-  maven { url "https://development.adaptris.net/nexus/content/repositories/snapshots" }
-  maven { url "https://development.adaptris.net/nexus/content/repositories/releases" }
+  maven { url "https://nexus.adaptris.net/nexus/content/groups/public" }
+  maven { url "https://nexus.adaptris.net/nexus/content/repositories/snapshots" }
+  maven { url "https://nexus.adaptris.net/nexus/content/repositories/releases" }
 }
 
 dependencies {
@@ -32,14 +32,13 @@ dependencies {
   antJunit ("org.apache.ant:ant-junit:1.8.2")
 }
 
-check.dependsOn -= test
-task test(overwrite: true) {
+task interlokServiceTest(overwrite: true) {
   doLast {
     javaexec {
       main = 'com.adaptris.tester.runners.TestExecutor'
       classpath = sourceSets.test.runtimeClasspath
       args "--serviceTest"
-      args "$projectDir/src/test/adapter/test.xml"
+      args "$projectDir/src/test/interlok/service-test.xml"
       args "--serviceTestOutput"
       args "$buildDir/test-results/"
     }
@@ -61,13 +60,16 @@ task junitReport {
   }
 }
 
-check.dependsOn += test
-test.dependsOn += processTestResources
-test.finalizedBy junitReport
+check.dependsOn += interlokServiceTest
+interlokServiceTest.dependsOn += processTestResources
+interlokServiceTest.finalizedBy junitReport
 
 distributions {
   main {
     contents {
+      from {
+        "src/main/interlok"
+      }
       into('lib') {
         from(project.configurations.runtime)
       }
@@ -87,4 +89,4 @@ docker {
 }
 
 docker.dependsOn installDist
-installDist.dependsOn test
+installDist.dependsOn interlokServiceTest
