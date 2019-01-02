@@ -13,14 +13,14 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
   docker logout registry.heroku.com;
   HEROKU_WEB_DOCKER_IMAGE_ID=$(docker inspect registry.heroku.com/$HEROKU_APP/web:latest --format={{.Id}})
   curl -n -X PATCH https://api.heroku.com/apps/$HEROKU_APP/formation \
-    -d '{
-    "updates": [
+    -d "{
+    \"updates\": [
       {
-        "type": "web",
-        "docker_image": "$HEROKU_WEB_DOCKER_IMAGE_ID"
+        \"type\": \"web\",
+        \"docker_image\": \"$HEROKU_WEB_DOCKER_IMAGE_ID\"
       }
     ]
-  }' \
+  }" \
     -H "Content-Type: application/json" \
     -H "Accept: application/vnd.heroku+json; version=3.docker-releases"\
     -H "Authorization: Bearer $HEROKU_PASS";
