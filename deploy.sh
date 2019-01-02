@@ -11,5 +11,17 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
   docker tag $REPO:latest registry.heroku.com/$HEROKU_APP/web:latest;
   docker push registry.heroku.com/$HEROKU_APP/web:latest;
   docker logout registry.heroku.com;
-  echo "Deployment to Heroku Complete"
+  local HEROKU_WEB_DOCKER_IMAGE_ID=$(docker inspect my_image --format={{.Id}})
+  curl -n -X PATCH https://api.heroku.com/apps/$HEROKU_APP/formation \
+    -d '{
+    "updates": [
+      {
+        "type": "web",
+        "docker_image": "$HEROKU_WEB_DOCKER_IMAGE_ID"
+      }
+    ]
+  }' \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/vnd.heroku+json; version=3.docker-releases";
+  echo "Deployment to Heroku Complete";
 fi
