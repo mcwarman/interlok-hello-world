@@ -22,6 +22,7 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
     ]
   }' \
     -H "Content-Type: application/json" \
-    -H "Accept: application/vnd.heroku+json; version=3.docker-releases";
+    -H "Accept: application/vnd.heroku+json; version=3.docker-releases"\
+    -H "Authorization: Bearer $HEROKU_PASS";
   echo "Deployment to Heroku Complete";
 fi
