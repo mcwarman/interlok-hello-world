@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
   echo "Deploying to Docker Hub"
   echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin;
@@ -24,7 +24,7 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
     -H 'Accept: application/vnd.github.v3+json' \
     -H "Authorization: Bearer $GITHUB_TOKEN" \
     -H 'Content-Type: application/json' | grep -oP 'Location: \K.*');
-  curl -s -X POST $GIT_DEPLOYMENT_URL \
+  curl -s -X POST "$GIT_DEPLOYMENT_URL/statuses" \
     -d "{ \"state\": \"success\", \"log_url\": \"https://dashboard.heroku.com/apps/$HEROKU_APP\", \"environment_url\" : \"$HEROKU_URL\"}" \
     -H 'Accept: application/vnd.github.ant-man-preview+json' \
     -H "Authorization: Bearer $GITHUB_TOKEN" \
