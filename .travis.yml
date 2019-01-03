@@ -4,6 +4,7 @@ env:
   global:
   - REPO=adaptrislabs/interlok-hello-world
   - HEROKU_APP=interlok-hello-world
+  - HEROKU_URL=https://interlok-hello-world.herokuapp.com/
 
 services:
   - docker

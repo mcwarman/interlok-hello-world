@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
   echo "Deploying to Docker Hub"
   echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin;
@@ -13,16 +13,21 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
   docker logout registry.heroku.com;
   HEROKU_WEB_DOCKER_IMAGE_ID=$(docker inspect registry.heroku.com/$HEROKU_APP/web:latest --format={{.Id}})
   curl -n -X PATCH https://api.heroku.com/apps/$HEROKU_APP/formation \
-    -d "{
-    \"updates\": [
-      {
-        \"type\": \"web\",
-        \"docker_image\": \"$HEROKU_WEB_DOCKER_IMAGE_ID\"
-      }
-    ]
-  }" \
+    -d "{ \"updates\": [ { \"type\": \"web\", \"docker_image\": \"$HEROKU_WEB_DOCKER_IMAGE_ID\" } ] }" \
     -H "Content-Type: application/json" \
     -H "Accept: application/vnd.heroku+json; version=3.docker-releases"\
     -H "Authorization: Bearer $HEROKU_PASS";
   echo "Deployment to Heroku Complete";
+  echo "Update to GitHub Environemnts";
+  GIT_DEPLOYMENT_URL=$(curl -si -X POST "https://api.github.com/repos/$TRAVIS_REPO_SLUG/deployments" \
+    -d "{ \"ref\": \"$TRAVIS_COMMIT\", \"description\": \"Heroku\", \"environment\": \"$HEROKU_APP\" }" \
+    -H 'Accept: application/vnd.github.v3+json' \
+    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -H 'Content-Type: application/json' | grep -oP 'Location: \K.*');
+  curl -s -X POST $GIT_DEPLOYMENT_URL \
+    -d "{ \"state\": \"success\", \"log_url\": \"https://dashboard.heroku.com/apps/$HEROKU_APP\", \"environment_url\" : \"$HEROKU_URL\"}" \
+    -H 'Accept: application/vnd.github.ant-man-preview+json' \
+    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -H 'Content-Type: application/json';
+  echo "Updated to GitHub Environemnts";
 fi
