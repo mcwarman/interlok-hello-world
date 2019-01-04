@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
   testCompile ("com.adaptris:interlok-service-tester:$adpCoreVersion") { changing= true}
-  antJunit ("org.apache.ant:ant-junit:1.8.2")
+  antJunit ("org.apache.ant:ant-junit:1.10.5")
 }
 
 task interlokServiceTest(overwrite: true) {
