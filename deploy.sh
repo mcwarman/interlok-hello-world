@@ -20,7 +20,7 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
   echo "Deployment to Heroku Complete";
   echo "Update to GitHub Environemnts";
   GIT_DEPLOYMENT_URL=$(curl -si -X POST \
-    -d "{ \"ref\": \"$TRAVIS_COMMIT\", \"description\": \"Heroku\", \"environment\": \"$HEROKU_APP\" }" \
+    -d "{ \"ref\": \"$TRAVIS_COMMIT\", \"description\": \"Heroku\", \"environment\": \"$HEROKU_APP\", \"required_contexts\" : [] }" \
     -H 'Accept: application/vnd.github.v3+json' \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H 'Content-Type: application/json' \
