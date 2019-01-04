@@ -24,7 +24,7 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
     -H 'Accept: application/vnd.github.v3+json' \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H 'Content-Type: application/json' \
-    "https://api.github.com/repos/$TRAVIS_REPO_SLUG/deployments" | grep -oP 'Location: \K.*');
+    "https://api.github.com/repos/$TRAVIS_REPO_SLUG/deployments" | grep -oP 'Location: \K[^\s]+');
   curl -s -X POST \
     -d "{ \"state\": \"success\", \"log_url\": \"https://dashboard.heroku.com/apps/$HEROKU_APP\", \"environment_url\" : \"$HEROKU_URL\"}" \
     -H 'Accept: application/vnd.github.ant-man-preview+json' \
