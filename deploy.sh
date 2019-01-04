@@ -19,11 +19,17 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; the
     -H "Authorization: Bearer $HEROKU_PASS";
   echo "Deployment to Heroku Complete";
   echo "Update to GitHub Environemnts";
-  curl -si -X POST \
+  GIT_DEPLOYMENT_URL=$(curl -si -X POST \
     -d "{ \"ref\": \"$TRAVIS_COMMIT\", \"description\": \"Heroku\", \"environment\": \"$HEROKU_APP\" }" \
     -H 'Accept: application/vnd.github.v3+json' \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H 'Content-Type: application/json' \
-    "https://api.github.com/repos/$TRAVIS_REPO_SLUG/deployments";
+    "https://api.github.com/repos/$TRAVIS_REPO_SLUG/deployments" | grep -oP 'Location: \K.*');
+  curl -s -X POST \
+    -d "{ \"state\": \"success\", \"log_url\": \"https://dashboard.heroku.com/apps/$HEROKU_APP\", \"environment_url\" : \"$HEROKU_URL\"}" \
+    -H 'Accept: application/vnd.github.ant-man-preview+json' \
+    -H "Authorization: token $GITHUB_TOKEN" \
+    -H 'Content-Type: application/json' \
+    "$GIT_DEPLOYMENT_URL/statuses";
   echo "Updated to GitHub Environemnts";
 fi
