@@ -1,4 +1,4 @@
-FROM adaptris/interlok:snapshot-alpine
+FROM adaptris/interlok:latest-alpine
 
 RUN rm -rf /opt/interlok/webapps/*.war
 

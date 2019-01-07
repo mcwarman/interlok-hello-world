@@ -1,23 +1,22 @@
 plugins {
-  id "java"
   id "distribution"
   id "com.palantir.docker" version "0.19.2"
 }
 
 ext {
-  adpCoreVersion = project.hasProperty('adpCoreVersion') ? project.getProperty('adpCoreVersion') : '3.8-SNAPSHOT'
+  interlokVersion = project.hasProperty('interlokVersion') ? project.getProperty('interlokVersion') : '3.8.0-RELEASE'
+  log4j2Version='2.9.1'
+  slf4jVersion='1.7.25'
 }
 
 distTar.enabled=false
 distZip.enabled=false
 dockerfileZip.enabled=false
-compileJava.enabled=false
-processResources.enabled=false
-classes.enabled=false
-jar.enabled=false
 
 configurations {
-  antJunit
+  antJunit{}
+  interlokRuntime{}
+  interlokTestRuntime{}
 }
 
 repositories {
@@ -28,7 +27,21 @@ repositories {
 }
 
 dependencies {
-  testCompile ("com.adaptris:interlok-service-tester:$adpCoreVersion") { changing= true}
+  interlokRuntime ("com.adaptris:interlok-core:$interlokVersion") { changing= true}
+  interlokRuntime ("com.adaptris:interlok-common:$interlokVersion") { changing= true}
+  interlokRuntime ("com.adaptris:interlok-boot:$interlokVersion") { changing=true }
+  interlokRuntime ("com.adaptris:interlok-logging:$interlokVersion") { changing=true }
+
+  interlokRuntime ("org.slf4j:slf4j-api:$slf4jVersion")
+  interlokRuntime ("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+  interlokRuntime ("org.slf4j:jul-to-slf4j:$slf4jVersion")
+  interlokRuntime ("org.apache.logging.log4j:log4j-core:$log4j2Version")
+  interlokRuntime ("org.apache.logging.log4j:log4j-1.2-api:$log4j2Version")
+  interlokRuntime ("org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}")
+  interlokRuntime ("org.apache.logging.log4j:log4j-api:$log4j2Version")
+
+  interlokTestRuntime ("com.adaptris:interlok-service-tester:$interlokVersion") { changing=true }
+  interlokTestRuntime files("./src/test/resources/")
   antJunit ("org.apache.ant:ant-junit:1.10.5")
 }
 
@@ -36,7 +49,7 @@ task interlokServiceTest(overwrite: true) {
   doLast {
     javaexec {
       main = 'com.adaptris.tester.runners.TestExecutor'
-      classpath = sourceSets.test.runtimeClasspath
+      classpath {[configurations.interlokRuntime.asPath, configurations.interlokTestRuntime.asPath]}
       args "--serviceTest"
       args "$projectDir/src/test/interlok/service-test.xml"
       args "--serviceTestOutput"
@@ -61,7 +74,6 @@ task junitReport {
 }
 
 check.dependsOn += interlokServiceTest
-interlokServiceTest.dependsOn += processTestResources
 interlokServiceTest.finalizedBy junitReport
 
 distributions {
@@ -71,7 +83,7 @@ distributions {
         "src/main/interlok"
       }
       into('lib') {
-        from(project.configurations.runtime)
+        from(project.configurations.interlokRuntime)
       }
       into('/') {
         from file("$projectDir/src/main/resources/docker-entrypoint-wrapper.sh")
