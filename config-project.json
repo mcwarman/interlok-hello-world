@@ -2,7 +2,9 @@
   "variableSets" : {
     "default" : { }
   },
-  "variableXpaths" : { },
+  "variableXpaths" : {
+    "/adapter/channel-list/channel[unique-id=\"channel\"]/consume-connection/port" : "${jetty.http.port}"
+  },
   "uidInXincludeCompntListFileName" : false,
   "xincludeXpaths" : { },
   "structured" : true

@@ -3,7 +3,7 @@
 Docker image that provides the classic programming example: "Hello World".
 
 ```
-$ docker run -d --rm -p 8080:8080 -e PORT=8080 adaptrislabs/interlok-hello-world
-$ curl -s http://localhost:8080/
+$ docker run -d --rm -p 8081:8081 -e PORT=8081 adaptrislabs/interlok-hello-world
+$ curl -s http://localhost:8081/
 Hello World!
 ```

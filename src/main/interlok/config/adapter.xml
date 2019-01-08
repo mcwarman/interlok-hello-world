@@ -23,8 +23,11 @@
   </failed-message-retrier>
   <channel-list>
     <channel>
-      <consume-connection class="jetty-embedded-connection">
-        <unique-id>jetty-embedded-connection</unique-id>
+      <consume-connection class="jetty-http-connection">
+        <unique-id>jetty-connection</unique-id>
+        <port>${jetty.http.port}</port>
+        <server-connector-properties/>
+        <http-configuration/>
       </consume-connection>
       <produce-connection class="null-connection">
         <unique-id>null-connection</unique-id>
@@ -38,7 +41,7 @@
               <destination>/*</destination>
             </destination>
             <parameter-handler class="jetty-http-ignore-parameters"/>
-            <header-handler class="jetty-http-headers-as-metadata"/>
+            <header-handler class="jetty-http-ignore-headers"/>
           </consumer>
           <service-collection class="service-list">
             <unique-id>service-list</unique-id>
@@ -46,7 +49,7 @@
               <payload-from-metadata-service>
                 <unique-id>set-payload</unique-id>
                 <metadata-tokens/>
-                <template><![CDATA[Hello World!]]></template>
+                <template>Hello World!</template>
               </payload-from-metadata-service>
             </services>
           </service-collection>
