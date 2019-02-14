@@ -1,4 +1,6 @@
 {
+  "name": "interlok-hello-world",
+  "description": "Hello World using Interlok + HTTP",
   "variableSets" : {
     "default" : { }
   },
