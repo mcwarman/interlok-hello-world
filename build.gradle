@@ -5,7 +5,7 @@ plugins {
 
 ext {
   // interlokVersion = project.hasProperty('interlokVersion') ? project.getProperty('interlokVersion') : '3.8.2-RELEASE'
-  interlokVersion = '3.8.3-RELEASE'
+  interlokVersion = '3.8.4-RELEASE'
   log4j2Version='2.11.2'
   slf4jVersion='1.7.26'
 }

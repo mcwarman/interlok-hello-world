@@ -7,7 +7,7 @@
       <unique-id>payload-from-metadata-service</unique-id>
       <service-to-test>
         <source class="file-source">
-          <file>src/main/interlok/config/adapter.xml</file>
+          <file>file:///./src/main/interlok/config/adapter.xml</file>
         </source>
         <preprocessors>
           <preprocessor class="xpath-preprocessor">
