@@ -7,7 +7,7 @@ ext {
   // interlokVersion = project.hasProperty('interlokVersion') ? project.getProperty('interlokVersion') : '3.8.2-RELEASE'
   interlokVersion = '3.9.0-RELEASE'
   log4j2Version='2.12.1'
-  slf4jVersion='1.7.26'
+  slf4jVersion='1.7.27'
 }
 
 distTar.enabled=false
