@@ -44,7 +44,7 @@ dependencies {
 
   interlokTestRuntime ("com.adaptris:interlok-service-tester:$interlokVersion") { changing=true }
   interlokTestRuntime files("./src/test/resources/")
-  antJunit ("org.apache.ant:ant-junit:1.10.6")
+  antJunit ("org.apache.ant:ant-junit:1.10.7")
 }
 
 task interlokServiceTest(overwrite: true) {
