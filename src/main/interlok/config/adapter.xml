@@ -40,12 +40,17 @@
               <configured-thread-name>hello-world</configured-thread-name>
               <destination>/*</destination>
             </destination>
-            <parameter-handler class="jetty-http-ignore-parameters"/>
-            <header-handler class="jetty-http-ignore-headers"/>
+            <parameter-handler class="jetty-http-parameters-as-metadata"/>
+            <header-handler class="jetty-http-headers-as-metadata"/>
           </consumer>
           <service-collection class="service-list">
             <unique-id>service-list</unique-id>
             <services>
+              <log-message-service>
+                <unique-id>log-message</unique-id>
+                <log-level>DEBUG</log-level>
+                <logging-format class="message-logging-with-payload"/>
+              </log-message-service>
               <payload-from-metadata-service>
                 <unique-id>set-payload</unique-id>
                 <metadata-tokens/>
