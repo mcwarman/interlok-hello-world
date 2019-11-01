@@ -1,8 +1,9 @@
 {
-  "name": "interlok-hello-world",
-  "description": "Hello World using Interlok + HTTP",
+  "name" : "interlok-hello-world",
+  "description" : "Hello World using Interlok + HTTP",
   "variableSets" : {
-    "default" : { }
+    "local-dev" : { },
+    "local-env" : { }
   },
   "variableXpaths" : {
     "/adapter/channel-list/channel[unique-id=\"channel\"]/consume-connection/port" : "${jetty.http.port}"
