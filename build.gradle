@@ -4,6 +4,7 @@ plugins {
 
 ext {
   interlokParentGradle = project.hasProperty('interlokParentGradle') ? project.getProperty('interlokParentGradle') : "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/parent.gradle"
+  interlokVerifyEnvironmentProperties = [jetty.http.port: "8080"]
 }
 
 allprojects {
