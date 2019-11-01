@@ -1,96 +1,23 @@
 plugins {
-  id "distribution"
   id "com.palantir.docker" version "0.22.1"
 }
 
 ext {
-  // interlokVersion = project.hasProperty('interlokVersion') ? project.getProperty('interlokVersion') : '3.8.2-RELEASE'
-  interlokVersion = '3.9.2-RELEASE'
-  log4j2Version='2.12.1'
-  slf4jVersion='1.7.28'
+  interlokParentGradle = project.hasProperty('interlokParentGradle') ? project.getProperty('interlokParentGradle') : "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/parent.gradle"
 }
 
-distTar.enabled=false
-distZip.enabled=false
+allprojects {
+  apply from: "${interlokParentGradle}"
+}
+
 dockerfileZip.enabled=false
-
-configurations {
-  antJunit{}
-  interlokRuntime{}
-  interlokTestRuntime{}
-}
-
-repositories {
-  mavenCentral()
-  maven { url "https://nexus.adaptris.net/nexus/content/groups/public" }
-  maven { url "https://nexus.adaptris.net/nexus/content/repositories/snapshots" }
-  maven { url "https://nexus.adaptris.net/nexus/content/repositories/releases" }
-}
-
-dependencies {
-  interlokRuntime ("com.adaptris:interlok-core:$interlokVersion") { changing= true}
-  interlokRuntime ("com.adaptris:interlok-common:$interlokVersion") { changing= true}
-  interlokRuntime ("com.adaptris:interlok-boot:$interlokVersion") { changing=true }
-  interlokRuntime ("com.adaptris:interlok-logging:$interlokVersion") { changing=true }
-  interlokRuntime ("com.adaptris:interlok-varsub:$interlokVersion") { changing=true }
-
-  interlokRuntime ("org.slf4j:slf4j-api:$slf4jVersion")
-  interlokRuntime ("org.slf4j:jcl-over-slf4j:$slf4jVersion")
-  interlokRuntime ("org.slf4j:jul-to-slf4j:$slf4jVersion")
-  interlokRuntime ("org.apache.logging.log4j:log4j-core:$log4j2Version")
-  interlokRuntime ("org.apache.logging.log4j:log4j-1.2-api:$log4j2Version")
-  interlokRuntime ("org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}")
-  interlokRuntime ("org.apache.logging.log4j:log4j-api:$log4j2Version")
-
-  interlokTestRuntime ("com.adaptris:interlok-service-tester:$interlokVersion") { changing=true }
-  interlokTestRuntime files("./src/test/resources/")
-  antJunit ("org.apache.ant:ant-junit:1.10.7")
-}
-
-task interlokServiceTest(overwrite: true) {
-  doLast {
-    javaexec {
-      main = 'com.adaptris.tester.runners.TestExecutor'
-      classpath {[configurations.interlokRuntime.asPath, configurations.interlokTestRuntime.asPath]}
-      args "--serviceTest"
-      args "$projectDir/src/test/interlok/service-test.xml"
-      args "--serviceTestOutput"
-      args "$buildDir/test-results/"
-    }
-  }
-}
-
-task junitReport {
-  doLast {
-    ant.taskdef(
-      name: 'junitreport',
-      classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
-      classpath: configurations.antJunit.asPath
-    )
-
-    ant.junitreport(todir: "$buildDir/test-results") {
-      fileset(dir: "$buildDir/test-results", includes: 'TEST-*.xml')
-      report(todir: "$buildDir/test-results/html", format: "frames"	)
-    }
-  }
-}
-
-check.dependsOn += interlokServiceTest
-interlokServiceTest.finalizedBy junitReport
 
 distributions {
   main {
     contents {
-      from {
-        "src/main/interlok"
-      }
-      into('lib') {
-        from(project.configurations.interlokRuntime)
-      }
       into('/') {
         from file("$projectDir/src/main/resources/docker-entrypoint-wrapper.sh")
       }
-      rename '(.*)-[0-9]+\\..*.jar', '$1.jar'
     }
   }
 }
@@ -103,4 +30,3 @@ docker {
 }
 
 docker.dependsOn installDist
-installDist.dependsOn interlokServiceTest
