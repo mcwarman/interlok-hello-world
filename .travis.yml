@@ -11,11 +11,11 @@ services:
   - docker
 
 install:
-  - ./gradlew check docker
+  - ./gradlew check sonarqube docker
 
 script:
   - docker run -it --rm -e INTERLOK_OPTS="-configtest bootstrap.properties" -e PORT=8080 $REPO:latest
- 
+
 after_success:
  - ./deploy.sh
 
