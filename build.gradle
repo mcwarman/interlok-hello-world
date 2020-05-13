@@ -14,21 +14,12 @@ allprojects {
 
 dockerfileZip.enabled=false
 
-distributions {
-  main {
-    contents {
-      into('/') {
-        from file("$projectDir/src/main/resources/docker-entrypoint-wrapper.sh")
-      }
-    }
-  }
-}
-
 docker {
   name "adaptrislabs/interlok-hello-world"
   tags 'latest'
+  copySpec.into("./build/distribution").from(installDist)
   pull true
-  files tasks.installDist.outputs
+  noCache true
 }
 
 docker.dependsOn installDist
