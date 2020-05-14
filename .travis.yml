@@ -10,6 +10,10 @@ env:
 services:
   - docker
 
+addons:
+  sonarcloud:
+    organization: adaptris-labs
+
 install:
   - ./gradlew check sonarqube docker
 
