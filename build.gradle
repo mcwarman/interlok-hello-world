@@ -4,7 +4,10 @@ plugins {
 }
 
 ext {
-  interlokParentGradle = project.findProperty('interlokParentGradle') ?: "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/build.gradle"
+  interlokParentGradle = project.findProperty('interlokParentGradle') ?: 'https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/develop/build.gradle'
+  interlokParentBaseUrl = project.findProperty('interlokParentGradle') ?: 'https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/develop'
+  interlokVersion  = '3.10-SNAPSHOT'
+  //interlokParentGradle = project.findProperty('interlokParentGradle') ?: 'https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/build.gradle'
   interlokVerifyEnvironmentProperties = ['PORT': '8080']
   buildEnv = 'env'
 }
