@@ -11,6 +11,8 @@ ext {
   buildEnv = 'env'
 }
 
+version = '1.0-SNAPSHOT'
+
 allprojects {
   apply from: "${interlokParentGradle}"
 }
