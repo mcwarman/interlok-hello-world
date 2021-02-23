@@ -36,10 +36,7 @@
         <standard-workflow>
           <consumer class="jetty-message-consumer">
             <unique-id>jetty-message-consumer</unique-id>
-            <destination class="configured-consume-destination">
-              <configured-thread-name>hello-world</configured-thread-name>
-              <destination>/*</destination>
-            </destination>
+            <path>/*</path>
             <parameter-handler class="jetty-http-parameters-as-metadata"/>
             <header-handler class="jetty-http-headers-as-metadata"/>
           </consumer>
@@ -51,11 +48,11 @@
                 <log-level>DEBUG</log-level>
                 <logging-format class="message-logging-with-payload"/>
               </log-message-service>
-              <payload-from-metadata-service>
+              <payload-from-template>
                 <unique-id>set-payload</unique-id>
                 <metadata-tokens/>
                 <template>Hello World!</template>
-              </payload-from-metadata-service>
+              </payload-from-template>
             </services>
           </service-collection>
           <producer class="jetty-standard-response-producer">

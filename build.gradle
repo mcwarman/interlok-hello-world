@@ -5,12 +5,12 @@ plugins {
 
 ext {
   interlokParentGradle = project.findProperty('interlokParentGradle') ?: 'https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/build.gradle'
-  interlokVersion  = '3.11-SNAPSHOT'
+  interlokVersion  = '4.0-SNAPSHOT'
   interlokVerifyEnvironmentProperties = ['PORT': '8080']
   buildEnv = 'env'
 }
 
-version = '1.0-SNAPSHOT'
+version = '2.0-SNAPSHOT'
 
 allprojects {
   apply from: "${interlokParentGradle}"

@@ -11,7 +11,7 @@
         </source>
         <preprocessors>
           <preprocessor class="xpath-preprocessor">
-            <xpath>//payload-from-metadata-service</xpath>
+            <xpath>//payload-from-template</xpath>
           </preprocessor>
         </preprocessors>
       </service-to-test>
