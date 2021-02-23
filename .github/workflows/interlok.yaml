@@ -32,4 +32,4 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Docker Image Check
       run: |
-        docker run -it --rm -e INTERLOK_OPTS="-configtest bootstrap.properties" -e PORT=8080 adaptrislabs/interlok-hello-world:latest
+        docker run --rm -e INTERLOK_OPTS="-configtest bootstrap.properties" -e PORT=8080 adaptrislabs/interlok-hello-world:latest
