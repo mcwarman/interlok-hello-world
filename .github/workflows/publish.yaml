@@ -67,7 +67,7 @@ jobs:
         customHeaders: |
           { "Accept": "application/vnd.heroku+json; version=3.docker-releases" }
         data: |
-          { "updates": [ { "type\": "web", "docker_image": "${{ steps.docker_build.outputs.digest }}" } ] }
+          { "updates": [ { "type": "web", "docker_image": "${{ steps.docker_build.outputs.digest }}" } ] }
     - name: Update GitHub deployment
       uses: chrnorm/deployment-action@releases/v1
       with:
