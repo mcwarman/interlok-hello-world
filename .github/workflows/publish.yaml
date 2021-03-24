@@ -22,6 +22,11 @@ jobs:
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}
+    - name: Dependency Check Cache
+      uses: actions/cache@v1
+      with:
+        path: /usr/share/dependency-check/data/cache
+        key: ${{ runner.os }}-dependency-check
     - name: Gradle Check, Install & Sonar
       run: |
         ./gradlew -Dorg.gradle.console=plain --no-daemon -PverboseTests=true check sonarqube installDist
@@ -43,7 +48,7 @@ jobs:
         registry: registry.heroku.com
         username: "_"
         password: ${{ secrets.HEROKU_KEY }}
-    - name: Build and push
+    - name: Docker Build and push
       uses: docker/build-push-action@v2
       with:
         context: .
