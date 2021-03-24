@@ -25,8 +25,8 @@ jobs:
     - name: Dependency Check Cache
       uses: actions/cache@v1
       with:
-        path: /usr/share/dependency-check/data/cache
-        key: ${{ runner.os }}-dependency-check
+        path: ~/.gradle/dependency-check-data
+        key: ${{ runner.os }}-dependency-check-data-${{ hashFiles('**/build.gradle') }}
     - name: Gradle Check, Install & Sonar
       run: |
         ./gradlew -Dorg.gradle.console=plain --no-daemon -PverboseTests=true check sonarqube installDist
