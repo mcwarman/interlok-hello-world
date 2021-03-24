@@ -64,5 +64,13 @@ jobs:
         url: 'https://api.heroku.com/apps/interlok-hello-world/formation'
         method: 'POST'
         bearerToken: ${{ secrets.HEROKU_KEY }}
+        customHeaders: |
+          { "Accept": "application/vnd.heroku+json; version=3.docker-releases" }
         data: |
           { "updates": [ { "type\": "web", "docker_image": "${{ steps.docker_build.outputs.digest }}" } ] }
+    - name: Create GitHub deployment
+      uses: chrnorm/deployment-action@releases/v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        target_url: https://interlok-hello-world.herokuapp.com
+        environment: interlok-hello-world
