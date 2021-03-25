@@ -27,6 +27,13 @@ jobs:
       with:
         path: ~/.gradle/dependency-check-data
         key: ${{ runner.os }}-dependency-check-data-${{ hashFiles('**/build.gradle') }}
+    - name: Create GitHub deployment
+      id: deployment
+      uses: chrnorm/deployment-action@releases/v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        target_url: https://interlok-hello-world.herokuapp.com
+        environment: interlok-hello-world
     - name: Gradle Check, Install & Sonar
       run: |
         ./gradlew -Dorg.gradle.console=plain --no-daemon -PverboseTests=true check sonarqube installDist
@@ -48,13 +55,6 @@ jobs:
         registry: registry.heroku.com
         username: "_"
         password: ${{ secrets.HEROKU_KEY }}
-    - name: Create GitHub deployment
-      uses: chrnorm/deployment-action@releases/v1
-      with:
-        id: deployment
-        token: ${{ secrets.GITHUB_TOKEN }}
-        target_url: https://interlok-hello-world.herokuapp.com
-        environment: interlok-hello-world
     - name: Docker Build and push
       id: docker_build
       uses: docker/build-push-action@v2
