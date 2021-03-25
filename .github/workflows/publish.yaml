@@ -58,6 +58,9 @@ jobs:
         tags: |
           adaptrislabs/interlok-hello-world:latest
           registry.heroku.com/interlok-hello-world/web:latest
+    - name: Inspect
+      run: |
+        HEROKU_WEB_DOCKER_IMAGE_ID=$(docker inspect registry.heroku.com/interlok-hello-world/web:latest --format={{.Id}})
     - name: Update Heroku
       uses: fjogeleit/http-request-action@master
       with:
@@ -67,7 +70,7 @@ jobs:
         customHeaders: |
           { "Accept": "application/vnd.heroku+json; version=3.docker-releases" }
         data: |
-          { "updates": [ { "type": "web", "docker_image": "${{ steps.docker_build.outputs.digest }}" } ] }
+          { "updates": [ { "type": "web", "docker_image": "${HEROKU_WEB_DOCKER_IMAGE_ID}" } ] }
     - name: Update GitHub deployment
       uses: chrnorm/deployment-action@releases/v1
       with:
