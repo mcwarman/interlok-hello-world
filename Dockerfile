@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:8-jre
+FROM azul/zulu-openjdk-alpine:11-jre
 
 ENV JVM_ARGS=-Xmx1024m
 ENV JAVA_OPTS=-Dsun.net.inetaddr.ttl=30

@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Set up JDK 11.0
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11.0
+    - name: Gradle Wrapper Cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
+    - name: Gradle Dependencies Cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}
+    - name: Dependency Check Cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.gradle/dependency-check-data
+        key: ${{ runner.os }}-dependency-check-data-${{ hashFiles('**/build.gradle') }}
+    - name: Gradle Check, Install & Sonar
+      run: |
+        ./gradlew -Dorg.gradle.console=plain --no-daemon -PverboseTests=true check sonarqube installDist
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Docker Build
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        platforms: linux/amd64
+        push: false
