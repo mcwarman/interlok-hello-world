@@ -16,6 +16,10 @@ allprojects {
   apply from: "${interlokParentGradle}"
 }
 
+dependencycies {
+  interlokRuntime ("com.thoughtworks.xstream:xstream:1.4.16")
+}
+
 dockerfileZip.enabled=false
 
 docker {
