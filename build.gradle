@@ -16,7 +16,7 @@ allprojects {
   apply from: "${interlokParentGradle}"
 }
 
-dependencycies {
+dependencies {
   interlokRuntime ("com.thoughtworks.xstream:xstream:1.4.16")
 }
 
