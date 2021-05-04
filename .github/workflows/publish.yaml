@@ -35,7 +35,6 @@ jobs:
       uses: chrnorm/deployment-action@releases/v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        environment_url: https://interlok-hello-world.herokuapp.com
         environment: interlok-hello-world
     - name: Gradle Check, Install & Sonar
       run: |
