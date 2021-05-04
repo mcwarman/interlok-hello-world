@@ -35,7 +35,7 @@ jobs:
       uses: chrnorm/deployment-action@releases/v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        target_url: https://interlok-hello-world.herokuapp.com
+        environment_url: https://interlok-hello-world.herokuapp.com
         environment: interlok-hello-world
     - name: Gradle Check, Install & Sonar
       run: |
@@ -88,7 +88,7 @@ jobs:
       uses: chrnorm/deployment-status@releases/v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        target_url: https://interlok-hello-world.herokuapp.com
+        environment_url: https://interlok-hello-world.herokuapp.com
         state: success
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
     - name: Update deployment status (failure)
@@ -96,6 +96,6 @@ jobs:
       uses: chrnorm/deployment-status@releases/v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        target_url: https://interlok-hello-world.herokuapp.com
+        environment_url: https://interlok-hello-world.herokuapp.com
         state: failure
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
