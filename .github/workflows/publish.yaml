@@ -17,17 +17,17 @@ jobs:
         java-version: 11.0
         distribution: 'adopt'
     - name: Gradle Wrapper Cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.6
       with:
         path: ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
     - name: Gradle Dependencies Cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.6
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}
     - name: Dependency Check Cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.6
       with:
         path: ~/.gradle/dependency-check-data
         key: ${{ runner.os }}-dependency-check-data-${{ hashFiles('**/build.gradle') }}
@@ -48,12 +48,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to DockerHub
-      uses: docker/login-action@v1 
+      uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Login to Heroku
-      uses: docker/login-action@v1 
+      uses: docker/login-action@v1
       with:
         registry: registry.heroku.com
         username: "_"
