@@ -5,7 +5,6 @@ ENV JAVA_OPTS=-Dsun.net.inetaddr.ttl=30
 ENV INTERLOK_OPTS=bootstrap.properties
 ENV INTERLOK_BASE=/opt/interlok
 ENV JAVA_TOOL_OPTIONS=""
-ENV JAVA_HOME=/usr/lib/jvm/zulu8
 
 RUN apk add --no-cache --update ca-certificates bash curl unzip su-exec && \
     addgroup -S interlok && \
